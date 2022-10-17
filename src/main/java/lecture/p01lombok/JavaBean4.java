@@ -1,4 +1,4 @@
-package lecturep.p01lombok;
+package lecture.p01lombok;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

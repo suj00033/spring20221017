@@ -1,4 +1,4 @@
-package lecturep.p01lombok;
+package lecture.p01lombok;
 
 public class JavaBean1 {
 	private String name;

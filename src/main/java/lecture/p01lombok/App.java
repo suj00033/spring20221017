@@ -1,4 +1,4 @@
-package lecturep.p01lombok;
+package lecture.p01lombok;
 
 public class App {
 	public static void main(String[] args) {
