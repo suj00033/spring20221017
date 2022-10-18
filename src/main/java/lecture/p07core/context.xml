@@ -7,5 +7,5 @@
 	
 	<!-- @Companent annotation이 붙은 클래스로 스프링 bean을 만듦 -->
 	<context:component-scan base-package="lecture.p07core"></context:component-scan> <!-- 그 하위 폴더를 전체스캔함 -->
-
+	<bean class="lecture.p06core.Dao"></bean>
 </beans>

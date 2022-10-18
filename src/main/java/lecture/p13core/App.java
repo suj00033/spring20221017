@@ -11,12 +11,12 @@ public class App {
 		Dao d = context.getBean(Dao.class);
 		
 		System.out.println(s);
-		System.out.println(d); // 얘랑
-		System.out.println(s.getDao()); // 얘랑
+		System.out.println(d); // 얘랑, get set 메소드
+		System.out.println(s.getDao()); // 얘랑 
 		
 		Controller c = context.getBean(Controller.class);
 		System.out.println(c);
-		System.out.println(c.getDao()); // 얘는 같음
+		System.out.println(c.getDao()); // 얘는 같음, Getter
 		
 		System.out.println("프로그램 계속 실행");
 	}

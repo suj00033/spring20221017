@@ -15,7 +15,7 @@ public class Config {
 	@Bean
 	public Servlet servlet() {
 		Servlet s = new Servlet();
-		// xml파일에서 <bean class="lecture.p03core.Servlet"></bean>과 같은 역할
+		// xml파일에서 <bean class="lecture.p13core.Servlet"></bean>과 같은 역할
 		s.setDao(dao());
 		return s;
 	}
