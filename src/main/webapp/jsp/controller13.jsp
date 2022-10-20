@@ -27,6 +27,8 @@
 		<input type="submit" value="전송">
 	</form>
 	
+	<hr>
+	
 	<form action="${pageContext.request.contextPath }/ex13/sub03">
 		점수 : <input type="number" name="score"> <br>
 		반이름 : <input type="text" name="className"> <br>
