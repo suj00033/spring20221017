@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!-- 쿼리가 복잡해질수록 xml파일을 이용해서 처리 -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- namespace attribute에는 연관되는 인터페이스 주소를 붙인다 -->
+<mapper namespace="org.zerock.mapper.lecture.Mapper01">
+  <!-- 실행될 쿼리를 이곳에 작성 -->
+  <select id="getEmployeeName" resultType="java.lang.String"> <!-- resultType="java.lang.String"으로 결과를 리턴 -->
+ 	 SELECT FirstName
+  	 FROM Employees
+ 	 WHERE EmployeeId = 5
+  </select>
+  
+  <select id="getProductName" resultType="string">
+  	 SELECT ProductName
+  	 FROM Products
+  	 WHERE ProductId = 3
+  </select>
+  
+  <select id="getPrice" resultType="double">
+  	SELECT Price
+	FROM Products
+	WHERE ProductID = 3
+  </select>
+  
+  <select id="getQuantity" resultType="int">
+  	SELECT Quantity
+	FROM OrderDetails
+	WHERE OrderDetailID = 1
+  </select>
+  
+  <!-- sql : Date >> java : java.time.LocalDate -->
+  <!-- sql : DateTime >> java : java.time.LocalDateTime -->
+  <select id="getBirthDate" resultType="java.time.LocalDate">
+  	SELECT BirthDate
+	FROM Employees
+	WHERE EmployeeId = 3
+  </select>
+</mapper>
