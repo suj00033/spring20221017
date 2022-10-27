@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.zerock.mapper.lecture.Mapper08">
+  
+  <!-- xml에서 <, >와 같은 부등호 기호가 태그로 인식되므로 다른 처리를 해야함 
+  		1. entity로 해결 : &lt;(<) 
+  		2. CDATA 요소 사용 : 대괄호 안의 문장은 다 문자로 인식하여 처리
+  		-->
+ 	<select id="getProductName" resultType="string">
+SELECT 
+	ProductName
+FROM 
+	Products
+WHERE 
+	Price &lt;= 20.00	
+	</select>
+
+	<select id="getProductName2" resultType="string">
+<![CDATA[
+	SELECT 
+		ProductName
+	FROM 
+		Products
+	WHERE 
+		Price <= 20.00	
+]]>
+	</select>
+  
+	<select id="getEmployeeFirstName" resultType="string">
+SELECT
+	FirstName
+FROM 	
+	Employees
+WHERE 
+	BirthDate &lt; '1960-01-01'
+	</select>
+  
+  
+  </mapper>

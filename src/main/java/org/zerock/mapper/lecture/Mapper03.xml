@@ -17,6 +17,8 @@
   	<result column="Country" property="country"/>
   </resultMap>
   
+  
+  <!-- 2 -->
   <select id="getEmployee" resultMap="employeeFullName">
   	SELECT FirstName, LastName
 	FROM Employees
