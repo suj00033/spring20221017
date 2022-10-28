@@ -7,7 +7,7 @@
   
   <delete id="removeCustomer">
   DELETE FROM Customers
-  WHERE CustomerID = 91
+  WHERE CustomerID = 90
   </delete>
   
   <delete id="removeEmployee">
@@ -55,5 +55,21 @@
 	(SupplierName, ContactName, Address, City, PostalCode, Country, Phone)
   VALUES
 	(#{name}, #{contactName}, #{address}, #{city}, #{postalCode}, #{country}, #{phone});
+  </insert>
+  
+  <!-- ture면 키값을 가져옴, keyProperty는 public class JavaBean18에서 pk값 -->
+  <insert id="insetCustomerAndGetKey" useGeneratedKeys="true" keyProperty="id">
+   INSERT INTO Customers
+	(CustomerName, ContactName, Address, City, PostalCode, Country)
+   VALUES
+	(#{name}, #{contactName}, #{address}, #{city}, #{postalCode}, #{country});
+  </insert>
+  
+  <!--  -->
+  <insert id="insertSupplierAndGetKey" useGeneratedKeys="true" keyProperty="id">
+  INSERT INTO Suppliers
+	(SupplierName, ContactName, Address, City, PostalCode, Country, Phone)
+  VALUES
+	(#{name}, #{contactName}, #{address}, #{city}, #{postalCode}, #{country}, #{phone})
   </insert>
   </mapper>

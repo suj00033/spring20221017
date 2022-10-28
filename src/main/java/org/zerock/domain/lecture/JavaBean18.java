@@ -2,6 +2,7 @@ package org.zerock.domain.lecture;
 
 import lombok.Data;
 
+// customer
 @Data
 public class JavaBean18 {
 	private int id; // pk키
