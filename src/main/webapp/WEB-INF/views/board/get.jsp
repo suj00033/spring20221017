@@ -9,21 +9,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insert title here</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 	<my:navBar></my:navBar>
-	<h1>${board.id }번 게시물</h1>
-	제목 <input type="text" value="${board.title }"> <br>
-	본문 <textarea>${board.content }</textarea> <br>
-	작성자 <input type="text" value="${board.writer }"> <br>
-	작성일시 <input type="datetime-local" value="${board.inserted }" readonly="readonly">
+		<div class="container-md">
+			<div class="row">
+				<div class="col">
 	
-	<br>
+	<h1>
+	${board.id }번 게시물
+		<c:url value="/board/modify" var="modifyLink">
+			<c:param name="id" value="${board.id }"></c:param>
+		</c:url>
+		<a class="btn btn-warning" href="${modifyLink}" >
+			<i class="fa-solid fa-pen-to-square"></i>
+		</a>
+	</h1>
 	
-	<c:url value="/board/modify" var="modifyLink">
-		<c:param name="id" value="${board.id }"></c:param>
-	</c:url>
-	<a class="btn btn-warning" href="${modifyLink}" >수정</a>
+	<div class="mb-3">
+		<label class="form-label">
+			제목 
+		</label>
+	</div>
+	<input class="form-control" type="text" value="${board.title }"> 
+	
+	<div class="mb-3">
+		<label class="form-label">
+			본문
+		</label>
+	 <textarea rows="5" class="form-control">${board.content }</textarea> 
+	</div>
+	
+	<div class="mb-3">
+		<label class="form-label">
+			작성자 
+		</label>
+	<input class="form-control" type="text" value="${board.writer }" readonly="readonly"> 
+	</div>
+	
+	<div class="mb-3">
+		<label class="form-label">
+			작성일시 
+		</label>
+	<input class="form-control"  type="datetime-local" value="${board.inserted }" readonly="readonly">
+	</div>
+	
+		</div>
+	</div>
+</div>
+	
 	
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
