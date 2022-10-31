@@ -16,6 +16,7 @@ public interface Mapper10 {
 	
 	int insetCustomer(JavaBean18 customer);
 	int insertSupplier(JavaBean19 supplier);
+	
 	int insetCustomerAndGetKey(JavaBean18 customer);
 	int insertSupplierAndGetKey(JavaBean19 supplier);
 }
