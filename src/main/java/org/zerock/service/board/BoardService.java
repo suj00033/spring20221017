@@ -22,30 +22,26 @@ public class BoardService {
 	}
 
 	// 게시글 목록 보기
-	public List<BoardDto> listBoard(int page, String keyword, PageInfo pageInfo) { 
+	public List<BoardDto> listBoard(int page, String type, String keyword, PageInfo pageInfo) { 
 		// 몇개 (두번째 ?, 0부터 10개를 보여주겠다)
 		int records = 10;
-		int offset = (page - 1) * records; // 어디서부터 (첫번째 ?)
+		int offset = (page - 1) * records;
 		
-		// 마지막 페이지 SELECT Count(*) FROM Board;
-		int countAll = mapper.countAll();
+		int countAll = mapper.countAll(type, "%" + keyword + "%"); // SELECT Count(*) FROM Board
 		int lastPage = (countAll - 1) / records + 1;
 		
 		int leftPageNumber = (page - 1) / 10 * 10 + 1;
 		int rightPageNumber = leftPageNumber + 9;
 		rightPageNumber = Math.min(rightPageNumber, lastPage);
 		
-		// 이전 버튼 유무
+		// 이전버튼 유무
 		boolean hasPreButton = page > 10;
-		
-		// 다음 버튼 유무
+		// 다음버튼 유무
 		boolean hasNextButton = page <= ((lastPage - 1) / 10 * 10);
 		
-		// 이전 버튼 눌렀을때 가는 페이지 번호
-		int jumpPrePageNumber = (page - 1) / 10 * 10 -9;
-				
-		// 다음 버튼 눌렀을때
-		int jumpNextPageNumber = (page - 1) / 10 * 10 + 11;
+		// 이전버튼 눌렀을 때 가는 페이지 번호
+		int jumpPrePageNumber = (page - 1) / 10 * 10 - 9;
+		int jumpNextPageNumber = (page - 1) / 10 * 10 + 11; 
 		
 		pageInfo.setHasPreButton(hasPreButton);
 		pageInfo.setHasNextButton(hasNextButton);
@@ -54,10 +50,11 @@ public class BoardService {
 		pageInfo.setCurrentPageNumber(page);
 		pageInfo.setLeftPageNumber(leftPageNumber);
 		pageInfo.setRightPageNumber(rightPageNumber);
-		pageInfo.setLastPageNumber(lastPage); //pageInfo domain
+		pageInfo.setLastPageNumber(lastPage);
 		
-		return mapper.list(offset, records, "%" + keyword + "%");
+		return mapper.list(offset, records, type, "%" + keyword + "%");
 	}
+	
 
 	// 게시글 선택해서 내용보기
 	public BoardDto get(int id) {

@@ -53,8 +53,7 @@
 	</table>
 	</div>
 </div>
-
-		<!-- .row>.col -->
+<!-- .row>.col -->
 		<div class="row">
 			<div class="col">
 				<nav class="mt-3" aria-label="Page navigation example">
@@ -64,7 +63,8 @@
 				  	<c:if test="${pageInfo.currentPageNumber ne 1 }">
 				  		<c:url value="/board/list" var="listLink">
 				  			<c:param name="page" value="1" />
-				  			<c:param name="q" value="${param.q }"></c:param>
+				  			<c:param name="q" value="${param.q }" />
+				  			<c:param name="t" value="${param.t }" />
 				  		</c:url>
 				  		<!-- li.page-item>a.page-link{맨앞버튼} -->
 						<li class="page-item">
@@ -77,7 +77,8 @@
 				  	<c:if test="${pageInfo.hasPreButton }">
 				  		<c:url value="/board/list" var="listLink">
 				  			<c:param name="page" value="${pageInfo.jumpPrePageNumber }"></c:param>
-				  			<c:param name="q" value="${param.q }"></c:param>
+				  			<c:param name="q" value="${param.q }" />
+				  			<c:param name="t" value="${param.t }" />
 				  		</c:url>
 				  		<li class="page-item">
 				  			<a href="${listLink }" class="page-link">
@@ -89,7 +90,8 @@
 				  	<c:forEach begin="${pageInfo.leftPageNumber }" end="${pageInfo.rightPageNumber }" var="pageNumber">
 				  		<c:url value="/board/list" var="listLink">
 				  			<c:param name="page" value="${pageNumber }" />
-				  			<c:param name="q" value="${param.q }"></c:param>
+				  			<c:param name="q" value="${param.q }" />
+				  			<c:param name="t" value="${param.t }" />
 				  		</c:url>
 					    <li class="page-item
 					    
@@ -102,7 +104,8 @@
 				  	<c:if test="${pageInfo.hasNextButton }">
 				  		<c:url value="/board/list" var="listLink">
 				  			<c:param name="page" value="${pageInfo.jumpNextPageNumber }"></c:param>
-				  			<c:param name="q" value="${param.q }"></c:param>
+				  			<c:param name="q" value="${param.q }" />
+				  			<c:param name="t" value="${param.t }" />
 				  		</c:url>
 				  		<li class="page-item">
 				  			<a href="${listLink }" class="page-link">
@@ -115,7 +118,8 @@
 				  	<c:if test="${pageInfo.currentPageNumber ne pageInfo.lastPageNumber }">
 				  		<c:url value="/board/list" var="listLink">
 				  			<c:param value="${pageInfo.lastPageNumber }" name="page" />
-				  			<c:param name="q" value="${param.q }"></c:param>
+				  			<c:param name="q" value="${param.q }" />
+				  			<c:param name="t" value="${param.t }" />
 				  		</c:url>
 				  		<!-- li.page-item>a.page-link{맨뒤버튼} -->
 				  		<li class="page-item">
@@ -132,3 +136,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,13 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ attribute name="active" required="false" %>
+
+<style>
+#searchTypeSelect {
+	width: auto;
+}
+</style>
+
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/board/list" var="listLink"></c:url>
 <c:url value="/board/register" var="registerLink"></c:url>
@@ -20,9 +28,17 @@
           <a class="nav-link ${active eq 'register' ? 'active' : '' }" href="${registerLink }">작성</a>
         </li>
       </ul>
+      
+      <!-- 검색창 옆에 검색필터 -->
+       <form action="${listLink }" class="d-flex" role="search">
+      	<select name="t" id="searchTypeSelect" class="form-select">
+      		<option value="all">전체</option>
+      		<option value="title" ${param.t == 'title' ? 'selected' : '' }>제목</option>
+      		<option value="content" ${param.t == 'content' ? 'selected' : '' }>본문</option>
+      		<option value="writer" ${param.t == 'writer' ? 'selected' : '' }>작성자</option>
+      	</select>
 
 	<!-- 검색창 / input value="${param.q }"는 검색창에 검색어 남아있도록 -->
-      <form action="${listLink}" class="d-flex" role="search">
         <input value="${param.q }" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
         <button class="btn btn-outline-success" type="submit">
         	<i class="fa-solid fa-magnifying-glass"></i>
