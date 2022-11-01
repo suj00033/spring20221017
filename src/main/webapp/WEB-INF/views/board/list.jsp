@@ -52,6 +52,27 @@
 	</table>
 	</div>
 </div>
+
+	<!-- .row>.col -->
+	<div class="row">
+		<div class="col">
+			<nav aria-label="Page navigation example">
+  				<ul class="pagination">
+  					<c:forEach begin="${pageInfo.leftPageNumber }" end="${pageInfo.rightPageNumber }" var="pageNumber">
+				  		<c:url value="/board/list" var="listLink">
+				  			<c:param name="page" value="${pageNumber }" />
+				  		</c:url>
+					    <li class="page-item
+					    
+					    	<%-- 현재페이지에 active 클래스 추가 --%>
+					    	${pageInfo.currentPageNumber eq pageNumber ? 'active' : '' }
+					    
+					    "><a class="page-link" href="${listLink }">${pageNumber }</a></li>
+				  	</c:forEach>
+  				</ul>
+			</nav>
+		</div>
+	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>

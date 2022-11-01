@@ -8,11 +8,13 @@ public interface BoardMapper {
 	
 	int insert(BoardDto board);
 
-	List<BoardDto> list();
+	List<BoardDto> list(int offset, int records);
 
 	BoardDto select(int id);
 
 	int update(BoardDto board);
 
 	int delete(int id);
+
+	int countAll();
 }

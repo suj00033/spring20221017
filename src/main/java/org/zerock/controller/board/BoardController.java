@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.board.BoardDto;
+import org.zerock.domain.board.PageInfo;
 import org.zerock.service.board.BoardService;
 
 @Controller
@@ -48,11 +49,14 @@ public class BoardController {
 	}
 	
 	// 게시물 목록으로 redirect
-	@GetMapping("list")
-	public void list(Model model) {
+	@GetMapping("list")            // 페이지가 없으면 1로
+	public void list(
+			@RequestParam(name="page", defaultValue = "1") int page, 
+			PageInfo pageInfo, // Model이 생략되어있음
+			Model model) {
 		// request param 수집/가공
 		// 비지니스 로직
-		List<BoardDto> list = service.listBoard();
+		List<BoardDto> list = service.listBoard(page, pageInfo);
 		
 		// add attribute
 		model.addAttribute("boardList", list);
