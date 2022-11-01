@@ -51,12 +51,14 @@ public class BoardController {
 	// 게시물 목록으로 redirect
 	@GetMapping("list")            // 페이지가 없으면 1로
 	public void list(
-			@RequestParam(name="page", defaultValue = "1") int page, 
+			@RequestParam(name="page", defaultValue = "1") int page,
+			@RequestParam(name="q", defaultValue = "") String keyword, // 검색 String q(keyword)
 			PageInfo pageInfo, // Model이 생략되어있음
 			Model model) {
 		// request param 수집/가공
-		// 비지니스 로직
-		List<BoardDto> list = service.listBoard(page, pageInfo);
+		
+		// 비지니스 로직(서비스)
+		List<BoardDto> list = service.listBoard(page, keyword, pageInfo);
 		
 		// add attribute
 		model.addAttribute("boardList", list);
