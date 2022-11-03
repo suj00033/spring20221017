@@ -1,4 +1,4 @@
-package org.zerock.domain.lecture.sample;
+package org.zerock.domain.lecture;
 
 import lombok.Data;
 
