@@ -34,12 +34,33 @@
 	<button class="" id="btn10">/ex45/sub010@@@@@@ 응답본문 responseBody</button>
 <br>
 	<button class="" id="btn11">/ex45/sub11@@@@@@ 응답본문 JavaBean 27 responseBody</button>
+<br><br>
+	<button class="" id="btn13">/ex45/sub13@@@@@@ map > json</button>
+<br>
+	<button class="" id="btn14">/ex45/sub14@@@@@@ map complex > json</button>
+<br>
+	<button class="" id="btn15">/ex45/sub15########## {"car" : "tesla", "model" : "avante", "color" : ["blue", "red"]}</button>
 <br>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	const ctx = "${pageContext.request.contextPath}";
 	
+	// map complex
+	document.querySelector("#btn15").addEventListener("click", function() {
+		fetch(ctx + "/ex45/sub15")
+	});
+
+	// map complex
+	document.querySelector("#btn14").addEventListener("click", function() {
+		fetch(ctx + "/ex45/sub14")
+	});
+
+	// map
+	document.querySelector("#btn13").addEventListener("click", function() {
+		fetch(ctx + "/ex45/sub13")
+	});
+
 	// JavaBean27
 	document.querySelector("#btn11").addEventListener("click", function() {
 		fetch(ctx + "/ex45/sub11")

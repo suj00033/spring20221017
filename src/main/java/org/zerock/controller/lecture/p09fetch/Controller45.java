@@ -2,7 +2,9 @@ package org.zerock.controller.lecture.p09fetch;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -138,5 +140,51 @@ public class Controller45 {
 		
 		return data;
 	}
+
+	// map > json
+	@GetMapping("sub13")
+	@ResponseBody
+	public Map<String, String> met13() {
+		Map<String, String> map = new HashMap<>();
+		map.put("address", "서울");
+		map.put("email", "son@hdhag.domn");
+		map.put("age", "22");
+		
+		return map;
+	}
+	
+	@GetMapping("sub14")
+	@ResponseBody
+	public Map<String, Object> met14() {
+		Map<String, Object> map = new HashMap<>();
+		JavaBean25 data = new JavaBean25();
+		JavaBean26 sub = new JavaBean26();
+		
+		sub.setAddress(List.of("제주", "강원도"));
+		sub.setMarried(true);
+		
+		data.setAge(33);
+		data.setInfo(sub);
+		
+		map.put("address", "부산");
+		map.put("age", 33);
+		map.put("married", true);
+		map.put("data", data);
+		
+		return map;
+	}
+
+	@GetMapping("sub15")
+	@ResponseBody
+	public Map<String, Object> met15() {
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("car", "tesla");
+		map.put("model", "avante");
+		map.put("color", List.of("blue", "red"));
+		
+		return map;
+	}
+	
 	
 }
