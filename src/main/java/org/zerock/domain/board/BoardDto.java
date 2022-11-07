@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-// jsp에서
 public class BoardDto {
 	private int id;
 	private String title;
