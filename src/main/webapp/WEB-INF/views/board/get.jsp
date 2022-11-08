@@ -139,7 +139,7 @@ document.querySelector("#modifyFormModalSubmitButton").addEventListener("click",
 	const id = this.dataset.replyId;
 	const data = {id, content};
 	
-	// 댓글 수정해서 올리기
+	// 댓글 수정되는 시점
 	fetch(`\${ctx}/reply/modify`, {
 		method : "put",
 		headers : {

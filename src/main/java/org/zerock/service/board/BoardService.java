@@ -4,20 +4,26 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.board.BoardDto;
 import org.zerock.domain.board.PageInfo;
 import org.zerock.mapper.board.BoardMapper;
+import org.zerock.mapper.board.ReplyMapper;
 
 // Mapper에게 일 시키기
 @Service
+// @Transactional에 붙여도 상관무
 public class BoardService {
 
 	@Autowired
-	private BoardMapper mapper;
+	private BoardMapper boardMapper;
+	
+	@Autowired
+	private ReplyMapper replyMapper;
 	
 	// 게시글 등록
 	public int register(BoardDto board) {
-		return mapper.insert(board);
+		return boardMapper.insert(board);
 		
 	}
 
@@ -27,7 +33,7 @@ public class BoardService {
 		int records = 10;
 		int offset = (page - 1) * records;
 		
-		int countAll = mapper.countAll(type, "%" + keyword + "%"); // SELECT Count(*) FROM Board
+		int countAll = boardMapper.countAll(type, "%" + keyword + "%"); // SELECT Count(*) FROM Board
 		int lastPage = (countAll - 1) / records + 1;
 		
 		int leftPageNumber = (page - 1) / 10 * 10 + 1;
@@ -52,22 +58,31 @@ public class BoardService {
 		pageInfo.setRightPageNumber(rightPageNumber);
 		pageInfo.setLastPageNumber(lastPage);
 		
-		return mapper.list(offset, records, type, "%" + keyword + "%");
+		return boardMapper.list(offset, records, type, "%" + keyword + "%");
 	}
 	
 
 	// 게시글 선택해서 내용보기
 	public BoardDto get(int id) {
-		return mapper.select(id);
+		return boardMapper.select(id);
 	}
 
 	public int update(BoardDto board) {
 		
-		return mapper.update(board);	
+		return boardMapper.update(board);	
 	}
 
+	// 한꺼번에 일어나는 작업에서 오류가 나지않도록 예외처리
+	@Transactional
 	public int remove(int id) {
-		return mapper.delete(id);
+		// 게시물의 댓글들 지우기
+		replyMapper.deleteByBoardId(id);
+		
+// int a = 3 / 0; // run time => 오류가 나면 댓글과 게시글이 삭제되지않도록
+		
+		// 게시물 지우기
+		return boardMapper.delete(id);
 	}
+	
 
 }

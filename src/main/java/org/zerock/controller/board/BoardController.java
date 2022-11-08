@@ -100,6 +100,7 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	// 게시글 글 지우기
 	@PostMapping("remove")
 	public String remove(int id, RedirectAttributes rttr) {
 		int cnt = service.remove(id);
@@ -112,4 +113,6 @@ public class BoardController {
 		
 		return "redirect:/board/list";
 	}
+	
+	
 }
