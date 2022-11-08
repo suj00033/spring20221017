@@ -5,7 +5,13 @@
   
 <mapper namespace="org.zerock.mapper.board.BoardMapper">
 
-	<select id="countAll" resultType="int">
+	<insert id="insertFile">
+	INSERT INTO File (boardId, name)
+	VALUES (#{id}, #{fileName})
+	</insert>
+	
+	
+		<select id="countAll" resultType="int">
 	SELECT COUNT(*) FROM Board
 	WHERE
 		<trim prefixOverrides="OR">
@@ -23,51 +29,68 @@
 		</trim>
 	</select>
 
-	<insert id="insert">
+	<!-- useGeneratedKeys="true" keyProperty="id"가 있어야 게시글 0번을 안가져오고 제대로 작동함 -->
+	<!-- 이후 파일첨부된 파일이 mySQL에 들어갔는지 확인 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
 	INSERT INTO Board (title, content, writer)
 	VALUES (#{title}, #{content}, #{writer})
-	
 	</insert>
 	
 	<select id="list" resultType="org.zerock.domain.board.BoardDto">
 	SELECT 
-		id,
-		title,
-		writer,
-		inserted
-	FROM Board
+		b.id,
+		b.title,
+		b.writer,
+		b.inserted,
+		COUNT(r.id) countReply
+	FROM Board b LEFT JOIN Reply r ON b.id = r.boardId
 	WHERE
 		
 		<trim prefixOverrides="OR">
 			<if test="type == 'all' or type == 'title'">
-			OR title LIKE #{keyword}
+			OR b.title LIKE #{keyword}
 			</if>
 			
 			<if test="type == 'all' or type == 'content'">
-			OR content LIKE #{keyword}
+			OR b.content LIKE #{keyword}
 			</if>
 			
 			<if test="type == 'all' or type == 'writer'">
-			OR writer LIKE #{keyword}
+			OR b.writer LIKE #{keyword}
 			</if>
 		</trim>
-	
-	ORDER BY id DESC
+	GROUP BY b.id
+	ORDER BY b.id DESC
 	LIMIT #{offset}, #{records}
 	</select>
 	
-	<select id="select" resultType="org.zerock.domain.board.BoardDto">
+	<!-- 하나의 게시물을 가지고오는 쿼리 -->
+	<!-- fileName이 여러개가 되기 때문에 따로 빼서 작성, 성능향상을 위해 fileId 삽입 -->
+	<select id="select" resultMap="boardMap">
 	SELECT
-		id,
-		title,
-		content,
-		writer,
-		inserted
+		b.id,
+		b.title,
+		b.content,
+		b.writer,
+		b.inserted,
+		f.id fileId,
+		f.name fileName
 	FROM
-		Board
+		Board b LEFT JOIN File f ON b.id = f.boardId
 	WHERE
-		id = #{id}
+		b.id = #{id}
 	</select>
+	
+	<resultMap type="org.zerock.domain.board.BoardDto" id="boardMap">
+		<id column="id" property="id"></id>
+		<result column="title" property="title"/>
+		<result column="writer" property="writer"/>
+		<result column="content" property="content"/>
+		<result column="inserted" property="inserted"/>
+		<collection property="fileName" ofType="string">
+			<result property="fileName" column="fileName"/>
+		</collection>
+	</resultMap>
 	
 	<update id="update">
 	UPDATE Board

@@ -43,6 +43,15 @@
 					<textarea rows="5" class="form-control" readonly>${board.content }</textarea>
 				</div>
 				
+				<%-- 이미지 출력 --%>
+				<div>
+					<c:forEach items="${board.fileName }" var="name">
+						<div>
+							<img src="/image/${board.id }/${board.fileName}" alt="">
+						</div>
+					</c:forEach>
+				</div>
+				
 				<div class="mb-3">
 					<label for="" class="form-label">
 						작성자 
@@ -64,26 +73,44 @@
 	
 	<hr>
 	
-	<div id="replyMessage1">
-	</div>
+	<%-- toast --%>
+	<div id="replyMessageToast" class="toast align-items-center top-0 start-50 translate-middle-x position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div id="replyMessage1" class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
 	
+	<%-- 댓글쓰기 --%>
 	<div class="container-md">
-		<div class="row">
-			<div class="col">
-				<input type="hidden" id="boardId" value="${board.id }">
-				<input type="text" id="replyInput1">
-				<button id="replySendButton1">댓글쓰기</button>
+			<div class="row">
+				<div class="col">
+					<%-- 댓글 경계선 아이콘 --%>
+					<h3><i class="fa-solid fa-comments"></i></h3>
+				</div>
 			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col">
-				<div id="replyListContainer">
-				
+			<div class="row">
+				<div class="col">							
+				<%-- 댓글 작성하는 부분 --%>
+					<input type="hidden" id="boardId" value="${board.id }">
+					
+					<div class="input-group">
+						<input type="text" id="replyInput1">
+						<button class="btn btn-outline-secondary" id="replySendButton1"><i class="fa-solid fa-message"></i></button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row mt-3">
+				<div class="col">
+					<div class="list-group" id="replyListContainer">
+						<%-- 댓글 리스트 출력되는곳 --%>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	
 	
 	<%-- 댓글 삭제 확인 모달 --%>
@@ -115,8 +142,8 @@
 	        <h1 class="modal-title fs-5">댓글 수정 양식</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body">
-	        <input type="text" id="modifyReplyInput">
+	      <div class="modal-body"> <%-- class="form-control" 길게 --%>
+	        <input type="text" class="form-control" id="modifyReplyInput">
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -131,6 +158,9 @@
 const ctx = "${pageContext.request.contextPath}";
 
 listReply();
+
+// 댓글 toast 자바스크립트
+const toast = new bootstrap.Toast(document.querySelector("#replyMessageToast"));
 
 // 댓글 수정 폼 모달
 document.querySelector("#modifyFormModalSubmitButton").addEventListener("click", function() {
@@ -148,7 +178,10 @@ document.querySelector("#modifyFormModalSubmitButton").addEventListener("click",
 		body : JSON.stringify(data)
 	})
 	.then(res => res.json())
-	.then(data => document.querySelector("#replyMessage1").innerText = data.message)
+	.then(data => {
+		document.querySelector("#replyMessage1").innerText = data.message;
+		toast.show(); // 업데이트 하고 나서 보여주는 토스트
+	})
 	.then(() => listReply()); // 댓글 수정하고 수정완료 되었다는 메세지 띄우기
 });
 
@@ -187,12 +220,29 @@ function listReply() {
 			// 댓글 삭제 버튼 이벤트 추가
 			const removeReplyButtonId = `removeReplyButton\${item.id}`;
 			// console.log(item.id);
+			
+			// 오른쪽 마진 "me-auto"
 			const replyDiv = `
-				<div>
-					\${item.content} : \${item.inserted}
-					<button data-bs-toggle="modal" data-bs-target="#modifyReplyFormModal" data-reply-id="\${item.id}" id="\${modifyReplyButtonId}">수정</button>
-					<button data-bs-toggle="modal" data-bs-target="#removeReplyConfirmModal" data-reply-id="\${item.id}" id="\${removeReplyButtonId}">삭제</button>
-				</div>`;
+				<div class="list-group-item d-flex">
+					<div class="me-auto"> 
+						<div>
+								\${item.content} 
+						</div>
+						
+							<small class="text-muted">
+								<i class="fa-regular fa-clock"></i> 
+								\${item.ago}
+							</small>
+					</div>
+					<div>
+						<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modifyReplyFormModal" data-reply-id="\${item.id}" id="\${modifyReplyButtonId}">
+							<i class="fa-solid fa-highlighter"></i>
+						</button>
+						<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#removeReplyConfirmModal" data-reply-id="\${item.id}" id="\${removeReplyButtonId}">
+							<i class="fa-solid fa-delete-left"></i>
+						</button>
+					</div>
+					</div>`;
 				/* data-reply-id => dataset 이라는 attribute를 이용해 reply-id에서 id값을 꺼내쓸수 있음 */
 			replyListContainer.insertAdjacentHTML("beforeend", replyDiv);
 			// 수정 폼 모달에 댓글 내용 넣기
@@ -223,7 +273,10 @@ function removeReply(replyId) {
 		method: "delete"
 	})
 	.then(res => res.json())
-	.then(data => document.querySelector("#replyMessage1").innerText = data.message)
+	.then(data => {
+		document.querySelector("#replyMessage1").innerText = data.message;
+		toast.show();
+	})
 	.then(() => listReply()); // 댓글 삭제되고 새로고침필요없이 바로 화면출력
 }
 
@@ -250,6 +303,7 @@ document.querySelector("#replySendButton1").addEventListener("click", function()
 		// 새댓글이 등록되고 다시 빈스트링으로 초기화
 		document.querySelector("#replyInput1").value = "";
 		document.querySelector("#replyMessage1").innerText = data.message;
+		toast.show();
 	})
 	// 새로운 댓글 바로 출력
 	.then(() => listReply());

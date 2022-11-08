@@ -42,11 +42,17 @@
 							<c:param name="id" value="${board.id }"></c:param>
 						</c:url>
 						<a href="${getLink}"> <!-- 링크로 게시물 이동 id쿼리붙여서 -->
-						${board.title }
+						${board.title } <!-- 게시물 제목 리스트 -->
 						</a>
+						
+						<c:if test="${board.countReply > 0 } "></c:if> <!-- 댓글 개수가 0일때 카운트 x -->
+						<span class="badge rounded-pill text-bg-secondary"> <!-- 댓글 아이콘 -->
+							<i class="fa-regular fa-comment-dots"></i>${board.countReply }
+						</span>
+						
 					</td>
 					<td>${board.writer }</td>
-					<td>${board.inserted }</td>
+					<td>${board.ago }</td>
 				</tr>
 			</c:forEach>
 		</tbody>

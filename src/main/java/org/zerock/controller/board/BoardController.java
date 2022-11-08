@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.board.BoardDto;
 import org.zerock.domain.board.PageInfo;
@@ -30,12 +31,27 @@ public class BoardController {
 	
 	// 등록한글 보여줌
 	@PostMapping("register")
-	public String register(BoardDto board, RedirectAttributes rttr) {  // title 프로퍼티를 받아야함
+	public String register(
+				BoardDto board,
+				MultipartFile[] files,
+				RedirectAttributes rttr) {  // title 프로퍼티를 받아야함
 		// request param 수집/가공 (자바빈)
 //		System.out.println(board); // 콘솔에 내용이 잘담겼는지 확인
 		
+		// 파일 업로드
+		// 1. web.xml dispatcherServlet 설정에 multi-config 추가
+		// 2. form에 enctype="multipart/form-data"
+		// 3. Controller의 메소드 argument type : MultipartFile
+		
+		
+		// request param 수집/가공
+//		System.out.println(files.length);
+//		for (MultipartFile file : files) {
+//			System.out.println(file.getOriginalFilename());
+//		}
+		
 		// business logic (Controller가 Service에게 일을 시키고 Service가 처리)
-		int cnt = service.register(board);
+		int cnt = service.register(board, files);
 		
 		if (cnt == 1) {
 			rttr.addFlashAttribute("message", "새 게시물이 등록되었습니다.");
