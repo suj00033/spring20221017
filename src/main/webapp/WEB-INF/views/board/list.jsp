@@ -42,13 +42,20 @@
 							<c:param name="id" value="${board.id }"></c:param>
 						</c:url>
 						<a href="${getLink}"> <!-- 링크로 게시물 이동 id쿼리붙여서 -->
-						${board.title } <!-- 게시물 제목 리스트 -->
+						${board.title } <!-- 게시물 제목 옆에 표시 -->
 						</a>
 						
 						<c:if test="${board.countReply > 0 } "></c:if> <!-- 댓글 개수가 0일때 카운트 x -->
 						<span class="badge rounded-pill text-bg-secondary"> <!-- 댓글 아이콘 -->
 							<i class="fa-regular fa-comment-dots"></i>${board.countReply }
 						</span>
+						
+						<%-- 파일 개수 --%>
+						<c:if test="${board.countFile > 0 } "></c:if> <!-- 댓글 개수가 0일때 카운트 x -->
+						<span class="badge rounded-pill text-bg-secondary"> <!-- 댓글 아이콘 -->
+							<i class="fa-solid fa-photo-film"></i>${board.countFile}
+						</span>
+						
 						
 					</td>
 					<td>${board.writer }</td>

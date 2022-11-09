@@ -5,20 +5,6 @@
   
 <mapper namespace="org.zerock.mapper.board.BoardMapper">
 	
-	<!-- 파일, 댓글 개수 카운트 -->
-	<select id="fileList" resultType="org.zerock.domain.board.BoardDto">
-	SELECT
-	    b.id,
-	    b.title,
-	    b.writer,
-	    b.inserted,
-	    COUNT(DISTINCT r.id) countReply,
-	    COUNT(DISTINCT f.id) countFile
-	FROM Board b LEFT JOIN Reply r On b.id = r.boardId
-             LEFT JOIN File f ON b.id = f.boardId
-	GROUP BY b.id
-	ORDER BY b.id DESC;
-	</select>
 
 	<delete id="deleteFileBoardIdAndFileName">
 	DELETE FROM File
@@ -64,14 +50,16 @@
 	</insert>
 	
 	<select id="list" resultType="org.zerock.domain.board.BoardDto">
-	SELECT 
-		b.id,
-		b.title,
-		b.writer,
-		b.inserted,
-		COUNT(r.id) countReply
+	SELECT
+	    b.id,
+	    b.title,
+	    b.writer,
+	    b.inserted,
+	    COUNT(DISTINCT r.id) countReply,
+	    COUNT(DISTINCT f.id) countFile
 	FROM Board b LEFT JOIN Reply r ON b.id = r.boardId
-	WHERE
+                 LEFT JOIN File f ON b.id = f.boardId
+    WHERE  
 		
 		<trim prefixOverrides="OR">
 			<if test="type == 'all' or type == 'title'">
@@ -93,6 +81,7 @@
 	
 	<!-- 하나의 게시물을 가지고오는 쿼리 -->
 	<!-- fileName이 여러개가 되기 때문에 따로 빼서 작성, 성능향상을 위해 fileId 삽입 -->
+	<!-- 파일, 댓글 개수 카운트 -->
 	<select id="select" resultMap="boardMap">
 	SELECT
 		b.id,
