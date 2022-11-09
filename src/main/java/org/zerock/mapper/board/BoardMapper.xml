@@ -49,6 +49,7 @@
 	VALUES (#{title}, #{content}, #{writer})
 	</insert>
 	
+	<!-- 파일, 댓글 개수 카운트 -->
 	<select id="list" resultType="org.zerock.domain.board.BoardDto">
 	SELECT
 	    b.id,
@@ -81,7 +82,6 @@
 	
 	<!-- 하나의 게시물을 가지고오는 쿼리 -->
 	<!-- fileName이 여러개가 되기 때문에 따로 빼서 작성, 성능향상을 위해 fileId 삽입 -->
-	<!-- 파일, 댓글 개수 카운트 -->
 	<select id="select" resultMap="boardMap">
 	SELECT
 		b.id,

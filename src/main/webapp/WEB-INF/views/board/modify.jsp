@@ -10,6 +10,12 @@
 <title>Insert title here</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style type="text/css">
+.custom-check.form-check-input:checked {
+	background-color: #f0a59c;
+	border-color: #f0a59c;
+}
+</style>
 </head>
 <body>
 	<my:navBar></my:navBar>
@@ -35,13 +41,17 @@
 		
 		<%-- 이미지 출력 --%>
 					<div class="mb-3">
-						<c:forEach items="${board.fileName }" var="name">
+						<c:forEach items="${board.fileName }" var="name" varStatus="status">
 							<div class="row">
-								<div class="col-2">
+								<div class="col-2 d-flex justify-content-center align-items-center">
+								
 									<%-- 삭제 여부 체크박스 --%>
-									삭제
-									<input type="checkbox" name="removeFiles" value="${name }">
+								<div class="form-check form-switch text-danger">
+								  <input name="removeFiles" value="${name }" class="custom-check form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+								  <label class="form-check-label" for="flexSwitchCheckChecked${status }"><i class="fa-regular fa-trash-can"></i></label>
 								</div>
+							</div>
+								
 								<div class="col-10">
 									<div>
 										<img class="img-fluid img-thumbnail" src="/image/${board.id }/${name}" alt="">
