@@ -64,7 +64,12 @@
 					<div class="mb-3">
 						<label for="" class="form-label">파일 추가</label>
 						<input multiple type="file" accept="image/*" class="form-control" name="files">
+					<%-- 이미 있는 파일 확인창 --%>
+						<div class="form-text" id="addFileInputText">
+						
+						</div>
 					</div>
+					
 					
 					<div class="mb-3">
 						<label for="" class="form-label">작성자</label>
@@ -127,10 +132,41 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <!-- 자바스크립트 -->
 <script>
+	// 중복되는 파일 확인
+	document.querySelector(`#modifyForm input[name="files"]`).addEventListener("change", function() {
+		const textDiv = document.querySelector("#addFileInputText");
+		textDiv.innerText = "";
+		
+		// 검증해서
+		let ok = false;
+		
+		// input:file 에서 선택한 파일명들
+		const files = document.querySelector(`#modifyForm input[name="files"]`).files;
+		console.log(files);
+		
+		// #modifyForm input[name="removeFiles"] 의 value들
+		const removeFileChecks = document.querySelectorAll(`#modifyForm input[name="removeFiles"]`);
+		
+		ok = Array.from(removeFileChecks).every((check) => Array.from(files).every((file) => file.name != check.value))
+		/*
+		for (const removeFileCheck of removeFileChecks) {
+			console.log(removeFileCheck.value);
+		}
+		*/
+		
+		// 과 비교해서 중복되는 게 있으면 ok = false
+		// 그렇지 않으면 true
+		
+		if (!ok) {
+			textDiv.innerText = "중복된 파일명이 있습니다.";
+		}
+	});
+	// 수정확인 버튼 클릭하면 수정 form 전송
 	document.querySelector("#modifyConfirmButton").addEventListener("click", function() {
 		document.querySelector("#modifyForm").submit();
 	});
 	
+	// 삭제확인 버튼 클릭하면 삭제 form 전송
 	document.querySelector("#removeConfirmButton").addEventListener("click", function() {
 		document.querySelector("#removeForm").submit();
 	});
