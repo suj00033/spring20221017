@@ -47,6 +47,7 @@ public class BoardController {
 //			System.out.println(file.getOriginalFilename());
 //		}
 		
+		
 		// business logic
 		int cnt = service.register(board, files);
 		

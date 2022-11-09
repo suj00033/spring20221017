@@ -17,15 +17,14 @@
 		<div class="row">
 			<div class="col">
 				<h1>게시물 작성</h1>
-				<form action="" method="post" enctype="multipart/form-data">
+				<form id="registerForm1" action="" method="post" enctype="multipart/form-data">
 					<div class="mb-3">
 						<label for="" class="form-label">제목</label>
-						<input type="text" class="form-control" name="title">
+						<input required="required" type="text" class="form-control" name="title">
 					</div>
-					
 					<div class="mb-3">
 						<label for="" class="form-label">본문</label>
-						<textarea rows="5" class="form-control" name="content"></textarea>
+						<textarea required="required" rows="5" class="form-control" name="content"></textarea>
 					</div>
 					
 					<div class="mb-3">
@@ -35,15 +34,43 @@
 					
 					<div class="mb-3">
 						<label for="" class="form-label">작성자</label>
-						<input type="text" class="form-control" name="writer">
+						<input required="required" type="text" class="form-control" name="writer">
 					</div>
 					
-					<input class="btn btn-primary" type="submit" value="등록">
-	
+					<input id="submitButton1" class="btn btn-primary" type="submit" value="등록">
+					
+				
+				
 				</form>
 			</div>
 		</div>
 	</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<script>
+document.querySelector("#submitButton1").addEventListener("click", function(e) {
+	// submit 진행 중지
+	e.preventDefault();
+	
+	// 제목input 입력한 값 가져와서
+	// 빈칸만 있는지 확인?
+	let titleValue = document.querySelector(`#registerForm1 input[name="title"]`).value
+	// 본문 textarea 입력한 값 가져와서
+	// 빈칸만 있는지 확인?
+	let contentValue = document.querySelector(`#registerForm1 textarea[name="content"]`).value		
+	// 작성자 input 값 가져와서
+	// 빈칸만 있는지 확인?
+	let writerValue = document.querySelector(`#registerForm1 input[name="writer"]`).value
+			
+	// 위 테스트 다 통과하면 submit
+	if (titleValue.trim() != "" 
+			&& contentValue.trim() != "" 
+			&& writerValue.trim() != "") {
+		
+		document.querySelector("#registerForm1").submit();
+	} else {
+		// 적절한 메세지 표시....
+	}
+});
+</script>
 </body>
 </html>
