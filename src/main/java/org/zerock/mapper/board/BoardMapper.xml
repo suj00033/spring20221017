@@ -4,6 +4,33 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="org.zerock.mapper.board.BoardMapper">
+	
+	<!-- 파일, 댓글 개수 카운트 -->
+	<select id="fileList" resultType="org.zerock.domain.board.BoardDto">
+	SELECT
+	    b.id,
+	    b.title,
+	    b.writer,
+	    b.inserted,
+	    COUNT(DISTINCT r.id) countReply,
+	    COUNT(DISTINCT f.id) countFile
+	FROM Board b LEFT JOIN Reply r On b.id = r.boardId
+             LEFT JOIN File f ON b.id = f.boardId
+	GROUP BY b.id
+	ORDER BY b.id DESC;
+	</select>
+
+	<delete id="deleteFileBoardIdAndFileName">
+	DELETE FROM File
+	WHERE boardId = #{id} AND name = #{fileName}
+	</delete>
+
+	<delete id="deleteFileByBoardId">
+	DELETE FROM File
+	WHERE boardId = #{id}
+	</delete>
+
+
 
 	<insert id="insertFile">
 	INSERT INTO File (boardId, name)
@@ -84,7 +111,7 @@
 	<resultMap type="org.zerock.domain.board.BoardDto" id="boardMap">
 		<id column="id" property="id"></id>
 		<result column="title" property="title"/>
-		<result column="writer" property="writer"/>
+		<result column="writer" property="writer"></result>
 		<result column="content" property="content"/>
 		<result column="inserted" property="inserted"/>
 		<collection property="fileName" ofType="string">

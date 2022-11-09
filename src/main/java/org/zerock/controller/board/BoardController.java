@@ -32,17 +32,14 @@ public class BoardController {
 	// 등록한글 보여줌
 	@PostMapping("register")
 	public String register(
-				BoardDto board,
-				MultipartFile[] files,
-				RedirectAttributes rttr) {  // title 프로퍼티를 받아야함
-		// request param 수집/가공 (자바빈)
-//		System.out.println(board); // 콘솔에 내용이 잘담겼는지 확인
-		
-		// 파일 업로드
-		// 1. web.xml dispatcherServlet 설정에 multi-config 추가
-		// 2. form에 enctype="multipart/form-data"
-		// 3. Controller의 메소드 argument type : MultipartFile
-		
+			BoardDto board,
+			MultipartFile[] files,
+			RedirectAttributes rttr) {
+		// * 파일업로드
+		// 1. web.xml 
+		//    dispatcherServlet 설정에 multipart-config 추가
+		// 2. form 에 enctype="multipart/form-data" 속성 추가 
+		// 3. Controller의 메소드 argument type : MultipartFile 
 		
 		// request param 수집/가공
 //		System.out.println(files.length);
@@ -50,7 +47,7 @@ public class BoardController {
 //			System.out.println(file.getOriginalFilename());
 //		}
 		
-		// business logic (Controller가 Service에게 일을 시키고 Service가 처리)
+		// business logic
 		int cnt = service.register(board, files);
 		
 		if (cnt == 1) {
@@ -61,9 +58,8 @@ public class BoardController {
 		
 		// /board/list로 redirect
 		return "redirect:/board/list";
-		
 	}
-	
+		
 	// 게시물 목록으로 redirect
 	@GetMapping("list")            // 페이지가 없으면 1로
 	public void list(
@@ -105,14 +101,20 @@ public class BoardController {
 	}
 	
 	@PostMapping("modify")
-	public String modify(BoardDto board, RedirectAttributes rttr) {
-		int cnt = service.update(board);
+	public String modify(
+			BoardDto board,
+			@RequestParam("files") MultipartFile[] addfiles,
+			@RequestParam(name = "removeFiles", required = false) List<String> removeFiles,
+			RedirectAttributes rttr) {
+		
+		int cnt = service.update(board, addfiles, removeFiles);
 		
 		if (cnt == 1) {
 			rttr.addFlashAttribute("message", board.getId() + "번 게시물이 수정되었습니다.");
 		} else {
 			rttr.addFlashAttribute("message", board.getId() + "번 게시물이 수정되지 않았습니다.");
 		}
+		
 		return "redirect:/board/list";
 	}
 	

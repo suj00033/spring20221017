@@ -16,7 +16,9 @@ import org.zerock.mapper.board.ReplyMapper;
 
 // Mapper에게 일 시키기
 @Service
-// @Transactional에 붙여도 상관무
+// 한꺼번에 일어나는 작업에서 오류가 나지않도록 예외처리
+// 댓글 추가, 삭제 메소드 변경
+@Transactional
 public class BoardService {
 
 	@Autowired
@@ -26,37 +28,33 @@ public class BoardService {
 	private ReplyMapper replyMapper;
 	
 	// 게시글 등록
-	@Transactional
 	public int register(BoardDto board, MultipartFile[] files) {
 		// db에 게시물 정보 저장
 		int cnt = boardMapper.insert(board);
 		
-		for(MultipartFile file : files)
+		for (MultipartFile file : files) {
 			if (file != null && file.getSize() > 0) {
+				// db에 파일 정보 저장
+				boardMapper.insertFile(board.getId(), file.getOriginalFilename());
 				
-			// db에 파일 저장
-			// 파일명, 게시물id 정보가 있어야함
-			boardMapper.insertFile(board.getId(), file.getOriginalFilename());
-			
-			// 파일 저장
-			// 파일이 업로드 될때마다 board id를 가져와 새폴더 만드는 작업
-			File folder = 
-					new File("C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + board.getId());
-			folder.mkdirs();
-			
-			File dest = new File(folder, file.getOriginalFilename());
-			
-			try {
-				// 받은 파일을 목적지로 전송 transferTo
-				file.transferTo(dest);
-		 	} catch (Exception e) {
-		 		// @Transactional은 RuntiemExecption에서만 rollback됨 
-		 		e.printStackTrace();
-		 		throw new RuntimeException(e);
-		 		}
-			
+				// 파일 저장
+				// board id 이름의 새폴더 만들기
+				File folder = new File("C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + board.getId());
+				folder.mkdirs();
+				
+				File dest = new File(folder, file.getOriginalFilename());
+				
+				try {
+					file.transferTo(dest);
+				} catch (Exception e) {
+					// @Transactional은 RuntimeException에서만 rollback 됨
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
 			}
-			return cnt;
+		}
+		
+		return cnt;
 	}
 
 	// 게시글 목록 보기
@@ -98,24 +96,77 @@ public class BoardService {
 	public BoardDto get(int id) {
 		return boardMapper.select(id);
 	}
-
-	public int update(BoardDto board) {
+	
+	public int update(BoardDto board, MultipartFile[] addFiles, List<String> removeFiles) {
+		int boardId = board.getId();
+		
+		// removeFiles 에 있는 파일명으로 
+		
+		for (String fileName : removeFiles) {
+			// 1. File 테이블에서 record 지우기
+			boardMapper.deleteFileBoardIdAndFileName(boardId, fileName);
+			// 2. 저장소에 실제 파일 지우기
+			String path = "C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + boardId + "\\" + fileName;
+			File file = new File(path);
+			
+			file.delete();
+		}
+		 
+		
+		for (MultipartFile file : addFiles) {
+			if (file != null && file.getSize() > 0) {
+				String name = file.getOriginalFilename();
+				// File table에 해당파일명 지우기
+				boardMapper.deleteFileBoardIdAndFileName(boardId, name);
+				
+				// File table에 파일명 추가
+				boardMapper.insertFile(boardId, name);
+				
+				// 저장소에 실제 파일 추가
+				File folder = new File("C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + board.getId());
+				folder.mkdirs();
+				
+				File dest = new File(folder, name);
+				
+				try {
+					file.transferTo(dest);
+				} catch (Exception e) {
+					// @Transactional은 RuntimeException에서만 rollback 됨
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+			
+		}
+		
 		
 		return boardMapper.update(board);	
 	}
 
-	// 한꺼번에 일어나는 작업에서 오류가 나지않도록 예외처리
-	// 댓글 추가, 삭제 메소드 변경
-	@Transactional
 	public int remove(int id) {
+		// 저장소의 파일 지우기
+		String path = "C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + id;
+		File folder = new File(path);
+		
+		File[] listFiles = folder.listFiles();
+		
+		for (File file : listFiles) {
+			file.delete();
+		}
+		
+		folder.delete();
+		
+		// db 파일 records 지우기
+		boardMapper.deleteFileByBoardId(id);
+		
+		
 		// 게시물의 댓글들 지우기
 		replyMapper.deleteByBoardId(id);
 		
-// int a = 3 / 0; // run time => 오류가 나면 댓글과 게시글이 삭제되지않도록
+//		int a = 3 / 0; // runtime exception
 		
 		// 게시물 지우기
 		return boardMapper.delete(id);
 	}
 	
-
 }

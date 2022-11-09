@@ -20,8 +20,8 @@
 	
 	<!-- 수정 -->
 	<!-- id는 modal button id와 같이 부여하여 수정완료 버튼을 누르고 수정이 되도록 활성화 -->
-	<form id="modifyForm" action="" method="post">
-	<input type="hidden" name="id" value="${board.id }">
+	<form id="modifyForm" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="id" value="${board.id }">
 		<!-- .mb-3*4>label.form-label+input.form-control -->
 		<div class="mb-3">
 			<label for="" class="form-label">제목</label>
@@ -33,37 +33,56 @@
 			<textarea rows="5" name="content" class="form-control">${board.content }</textarea>
 		</div>
 		
-		<div class="mb-3">
-			<label for="" class="form-label">작성자</label>
-			<input type="text" name="writer" class="form-control" value="${board.writer }">
-		</div>
-		
-		<div class="mb-3">
-			<label for="" class="form-label">작성일시</label>
-			<input type="datetime-local" class="form-control" value="${board.inserted }" readonly>
-		</div>
-	</form>
-	
-	
-	<!-- 삭제 -->
-	<input class="btn btn-warning" type="submit" value="수정" data-bs-toggle="modal" data-bs-target="#modifyModal">
-	<c:url value="/board/remove" var="removeLink"/>
-	<input class="btn btn-warning" type="submit" value="삭제" data-bs-toggle="modal" data-bs-target="#removeModal">
-	
-	<form id="removeForm" action="${removeLink }" method="post">
-	<input type="hidden" name="id" value="${board.id }">
-	</form>
-	
+		<%-- 이미지 출력 --%>
+					<div class="mb-3">
+						<c:forEach items="${board.fileName }" var="name">
+							<div class="row">
+								<div class="col-2">
+									<%-- 삭제 여부 체크박스 --%>
+									삭제
+									<input type="checkbox" name="removeFiles" value="${name }">
+								</div>
+								<div class="col-10">
+									<div>
+										<img class="img-fluid img-thumbnail" src="/image/${board.id }/${name}" alt="">
+									</div>
+								</div>
+							</div>
+						</c:forEach>		
+					</div>
+					
+					<div class="mb-3">
+						<label for="" class="form-label">파일 추가</label>
+						<input multiple type="file" accept="image/*" class="form-control" name="files">
+					</div>
+					
+					<div class="mb-3">
+						<label for="" class="form-label">작성자</label>
+						<input type="text" name="writer" class="form-control" value="${board.writer }">
+					</div>
+					<div class="mb-3">
+						<label for="" class="form-label">작성일시</label>
+						<input type="text" class="form-control" value="${board.inserted }" readonly>
+					</div>
+				</form>
+				<input class="btn btn-warning" type="submit" value="수정" data-bs-toggle="modal" data-bs-target="#modifyModal">
+				<c:url value="/board/remove" var="removeLink"/>
+				<input class="btn btn-danger" type="submit" value="삭제" data-bs-toggle="modal" data-bs-target="#removeModal">
+				
+				<form id="removeForm" action="${removeLink }" method="post">
+				<input type="hidden" name="id" value="${board.id }">
+				</form>
+
+			</div>
 		</div>
 	</div>
-</div>
-	
-	<!-- 수정 Modal -->
+
+	<!-- modify Modal -->
 	<div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="exampleModalLabel">수정 확인?</h1>
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">수정 확인</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
@@ -71,18 +90,18 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-	        <button id="modifyConfirmButton" type="button" class="btn btn-primary">수정완료</button>
+	        <button id="modifyConfirmButton" type="button" class="btn btn-primary">확인</button>
 	      </div>
 	    </div>
 	  </div>
 	</div>
-
-	<!-- 삭제 Modal -->
+	
+	<!-- remove Modal -->
 	<div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="exampleModalLabel">삭제 확인?</h1>
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">삭제 확인</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
@@ -90,7 +109,7 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-	        <button id="removeConfirmButton" type="button" class="btn btn-primary">삭제완료</button>
+	        <button id="removeConfirmButton" type="button" class="btn btn-danger">확인</button>
 	      </div>
 	    </div>
 	  </div>

@@ -14,7 +14,9 @@ public class BoardDto {
 	private String content;
 	private String writer;
 	private LocalDateTime inserted;
+	
 	private int countReply;
+	private int countFile;
 	
 	// 여러 파일명을 담기위해 리스트로
 	private List<String> fileName;
