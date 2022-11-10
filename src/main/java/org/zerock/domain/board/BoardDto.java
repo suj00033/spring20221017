@@ -29,7 +29,6 @@ public class BoardDto {
 
 		String result = "";
 		// 작성일과 현재가
-
 		if (oneDayBefore.isBefore(inserted)) {
 			// 하루 차이면 시간을 출력
 			result = inserted.toLocalTime().toString();
