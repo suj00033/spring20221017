@@ -19,6 +19,7 @@ public class BoardDto {
 	private int countFile;
 	
 	// 여러 파일명을 담기위해 리스트로
+	// 리스트
 	private List<String> fileName;
 	
 	public String getAgo() {
