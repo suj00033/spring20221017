@@ -35,6 +35,7 @@ public class BoardDto {
 			result = inserted.toLocalTime().toString();
 		} else if (oneMonthBefore.isBefore(inserted)) {
 			// 1달 내이면 n일 전
+			// dndn
 			result = Period.between(inserted.toLocalDate(), now.toLocalDate())
 					.getDays() + "일 전";
 		} else if (oneYearBefore.isBefore(inserted)) {
