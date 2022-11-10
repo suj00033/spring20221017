@@ -64,10 +64,8 @@
 					<div class="mb-3">
 						<label for="" class="form-label">파일 추가</label>
 						<input multiple type="file" accept="image/*" class="form-control" name="files">
-					<%-- 이미 있는 파일 확인창 --%>
-						<div class="form-text" id="addFileInputText">
-						
-						</div>
+						<%-- 이미 있는 파일 확인창 --%>
+						<div class="form-text" id="addFileInputText"></div>
 					</div>
 					
 					
