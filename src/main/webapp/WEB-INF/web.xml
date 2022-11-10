@@ -38,7 +38,4 @@
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <listener>
-    <listener-class>org.zerock.listener.CustomApplicationListener</listener-class>
-  </listener>
 </web-app>
