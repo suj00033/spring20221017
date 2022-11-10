@@ -3,9 +3,8 @@ package org.zerock.service.board;
 import java.io.File;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,10 +13,12 @@ import org.zerock.domain.board.PageInfo;
 import org.zerock.mapper.board.BoardMapper;
 import org.zerock.mapper.board.ReplyMapper;
 
-// Mapper에게 일 시키기
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
 @Service
-// 한꺼번에 일어나는 작업에서 오류가 나지않도록 예외처리
-// 댓글 추가, 삭제 메소드 변경
 @Transactional
 public class BoardService {
 
@@ -27,7 +28,12 @@ public class BoardService {
 	@Autowired
 	private ReplyMapper replyMapper;
 	
-	// 게시글 등록
+	@Autowired
+	private S3Client s3Client;
+	
+	@Value("${aws.s3.bucket}")
+	private String bucketName;
+	
 	public int register(BoardDto board, MultipartFile[] files) {
 		// db에 게시물 정보 저장
 		int cnt = boardMapper.insert(board);
@@ -37,17 +43,25 @@ public class BoardService {
 				// db에 파일 정보 저장
 				boardMapper.insertFile(board.getId(), file.getOriginalFilename());
 				
-				// 파일 저장
-				// board id 이름의 새폴더 만들기
-				File folder = new File("C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + board.getId());
-				folder.mkdirs();
-				
-				File dest = new File(folder, file.getOriginalFilename());
-				
 				try {
-					file.transferTo(dest);
+					// S3에 파일 저장
+					// 키 생성
+					String key = "prj1/board/" + board.getId() + "/" + file.getOriginalFilename();
+					
+					// putObjectRequest
+					PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+							.bucket(bucketName)
+							.key(key)
+							.acl(ObjectCannedACL.PUBLIC_READ)
+							.build();
+					
+					// requestBody
+					RequestBody requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
+					
+					// object(파일) 올리기
+					s3Client.putObject(putObjectRequest, requestBody);
+					
 				} catch (Exception e) {
-					// @Transactional은 RuntimeException에서만 rollback 됨
 					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
@@ -57,9 +71,7 @@ public class BoardService {
 		return cnt;
 	}
 
-	// 게시글 목록 보기
-	public List<BoardDto> listBoard(int page, String type, String keyword, PageInfo pageInfo) { 
-		// 몇개 (두번째 ?, 0부터 10개를 보여주겠다)
+	public List<BoardDto> listBoard(int page, String type, String keyword, PageInfo pageInfo) {
 		int records = 10;
 		int offset = (page - 1) * records;
 		
@@ -71,17 +83,17 @@ public class BoardService {
 		rightPageNumber = Math.min(rightPageNumber, lastPage);
 		
 		// 이전버튼 유무
-		boolean hasPreButton = page > 10;
+		boolean hasPrevButton = page > 10;
 		// 다음버튼 유무
 		boolean hasNextButton = page <= ((lastPage - 1) / 10 * 10);
 		
 		// 이전버튼 눌렀을 때 가는 페이지 번호
-		int jumpPrePageNumber = (page - 1) / 10 * 10 - 9;
+		int jumpPrevPageNumber = (page - 1) / 10 * 10 - 9;
 		int jumpNextPageNumber = (page - 1) / 10 * 10 + 11; 
 		
-		pageInfo.setHasPreButton(hasPreButton);
+		pageInfo.setHasPreButton(hasPrevButton);
 		pageInfo.setHasNextButton(hasNextButton);
-		pageInfo.setJumpPrePageNumber(jumpPrePageNumber);
+		pageInfo.setJumpPrePageNumber(jumpPrevPageNumber);
 		pageInfo.setJumpNextPageNumber(jumpNextPageNumber);
 		pageInfo.setCurrentPageNumber(page);
 		pageInfo.setLeftPageNumber(leftPageNumber);
@@ -90,28 +102,29 @@ public class BoardService {
 		
 		return boardMapper.list(offset, records, type, "%" + keyword + "%");
 	}
-	
 
-	// 게시글 선택해서 내용보기
 	public BoardDto get(int id) {
+		// TODO Auto-generated method stub
 		return boardMapper.select(id);
 	}
-	
+
 	public int update(BoardDto board, MultipartFile[] addFiles, List<String> removeFiles) {
 		int boardId = board.getId();
 		
 		// removeFiles 에 있는 파일명으로 
 		
-		for (String fileName : removeFiles) {
-			// 1. File 테이블에서 record 지우기
-			boardMapper.deleteFileBoardIdAndFileName(boardId, fileName);
-			// 2. 저장소에 실제 파일 지우기
-			String path = "C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + boardId + "\\" + fileName;
-			File file = new File(path);
-			
-			file.delete();
+		if (removeFiles != null) {
+			for (String fileName : removeFiles) {
+				// 1. File 테이블에서 record 지우기
+				boardMapper.deleteFileBoardIdAndFileName(boardId, fileName);
+				// 2. 저장소에 실제 파일 지우기
+				String path = "C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + boardId + "\\" + fileName;
+				File file = new File(path);
+				
+				file.delete();
+			}
 		}
-		 
+		
 		
 		for (MultipartFile file : addFiles) {
 			if (file != null && file.getSize() > 0) {
@@ -150,7 +163,6 @@ public class BoardService {
 		
 		File[] listFiles = folder.listFiles();
 		
-		// 파일없는 게시글 삭제하기 위해서 if문 삽입
 		if (listFiles != null) {
 			for (File file : listFiles) {
 				file.delete();
@@ -173,3 +185,8 @@ public class BoardService {
 	}
 	
 }
+
+
+
+
+
