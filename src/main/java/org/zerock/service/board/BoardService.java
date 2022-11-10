@@ -150,6 +150,7 @@ public class BoardService {
 		
 		File[] listFiles = folder.listFiles();
 		
+		// 파일없는 게시글 삭제하기 위해서 if문 삽입
 		if (listFiles != null) {
 			for (File file : listFiles) {
 				file.delete();
