@@ -15,6 +15,7 @@ import org.zerock.mapper.board.ReplyMapper;
 
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -157,19 +158,24 @@ public class BoardService {
 	}
 
 	public int remove(int id) {
-		// 저장소의 파일 지우기
-		String path = "C:\\Users\\user\\Desktop\\study\\upload\\prj1\\board\\" + id;
-		File folder = new File(path);
+		BoardDto board = boardMapper.select(id); // BoardDto에서 selecte를 가져와서
 		
-		File[] listFiles = folder.listFiles();
+		// list에 있는 (파일첨부 2개 이상) 가져와 s3저장소 지울수 있음
+		List<String> fileNames = board.getFileName();
 		
-		if (listFiles != null) {
-			for (File file : listFiles) {
-				file.delete();
+		if (fileNames != null) {
+			for (String fileName : fileNames) {
+				// s3 저장소의 파일 지우기
+				String key = "prj1/board/" + id + "/" + fileName;
+				DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+						.bucket(bucketName)
+						.key(key)
+						.build();
+				s3Client.deleteObject(deleteObjectRequest);
+				
 			}
 		}
 		
-		folder.delete();
 		
 		// db 파일 records 지우기
 		boardMapper.deleteFileByBoardId(id);
