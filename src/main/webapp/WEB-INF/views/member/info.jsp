@@ -17,7 +17,21 @@
 	<div class="container-md">
 		<div class="row">
 			<div class="col">
-				<h1>회원 정보</h1>
+				
+				<c:if test="${not empty message }">
+					<div class="alert alert-success">
+						${message }
+					</div>
+				</c:if>
+				
+				<h1>
+					회원 정보 
+					
+					<c:url value="/member/modify" var="modifyLink">
+						<c:param value="${member.id }" name="id"></c:param>
+					</c:url>
+					<a href="${modifyLink }">수정</a>
+				</h1>
 				
 				아이디 <input type="text" value="${member.id }" readonly> <br>
 				암호 <input type="text" value="${member.password }" readonly> <br>

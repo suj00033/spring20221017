@@ -2,40 +2,51 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="org.zerock.mapper.member.MemberMapper">
   
-  	<!-- 회원 정보 보기 -->
+<mapper namespace="org.zerock.mapper.member.MemberMapper">
+
+	<delete id="deleteById">
+	DELETE FROM Member
+	WHERE id = #{id}
+	</delete>
+
+	<update id="update">
+	UPDATE Member
+	SET
+		password = #{password},
+		email = #{email}
+	WHERE
+		id = #{id}
+	
+	</update>
+
 	<select id="selectById" resultType="org.zerock.domain.member.MemberDto">
 	SELECT 
-		id, 
-		password, 
-		email, 
+		id,
+		password,
+		email,
 		inserted
-	FROM 
+	FROM
 		Member
-	WHERE 
+	WHERE
 		id = #{id}
+	
 	</select>
 
+	<select id="selectAll" resultType="org.zerock.domain.member.MemberDto">
+	SELECT 
+		id,
+		'숨김' password,
+		email,
+		inserted
+	FROM
+		Member
+	ORDER BY
+		id 
+	</select>
 
-  	<!-- 회원 가입 -->
-  	<insert id="insert">
-  	INSERT INTO Member (id, password, email)
-  	VALUES (#{id}, #{password}, #{email})
-  	</insert>
-  	
-  	<!-- 회원 목록 -->
-  	<select id="selectAll" resultType="org.zerock.domain.member.MemberDto">
-  	SELECT
-  		id,
-  		'숨김' password,
-  		email,
-  		inserted
-  	FROM 
-  		Member
-  	ORDER BY
-  		id 
-  	</select>
-  	
-  	
-  </mapper>
+	<insert id="insert">
+	INSERT INTO Member (id, password, email)
+	VALUES (#{id}, #{password}, #{email})
+	</insert>
+</mapper>
