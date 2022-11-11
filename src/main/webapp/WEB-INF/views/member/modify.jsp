@@ -35,14 +35,17 @@
 					<%-- 전 암호를 넣는 곳 --%>
 					<input type="hidden" name="oldPassword" />
 				</form>
-				<%-- 바로 수정되지않도록 form 밖으로 빼줌 --%>
-				<input type="submit" value="수정" data-bs-toggle="modal" data-bs-target="#modifyModal">
 				
 				<c:url value="/member/remove" var="removeUrl" />
-				<form action="${removeUrl }" method="post">
+				<form id="form2" action="${removeUrl }" method="post">
 					<input type="hidden" name="id" value="${member.id }">
-					<input type="submit" value="탈퇴">
+					<%-- 전 암호를 넣는 곳 --%>
+					<input type="hidden" name="oldPassword" />
 				</form>
+				
+				<%-- 나란히 놓기 위해 밖으로 빼줌 --%>
+				<input type="submit" value="수정" data-bs-toggle="modal" data-bs-target="#modifyModal">
+				<input type="submit" value="탈퇴" data-bs-toggle="modal" data-bs-target="#removeModal">
 			</div>
 		</div>
 	</div>
@@ -68,9 +71,45 @@
 	  </div>
 	</div>
 	
+	<%-- 탈퇴(remove) 시 기존암호 입력 Modal --%>
+	<div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">기존 암호 입력</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<%-- 모달의 암호입력 --%>
+	      	<input id="oldPasswordInput2" type="text" class="form-control"/> 
+	        
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button id="modalConfirmButton2" type="button" class="btn btn-danger">탈퇴</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script type="text/javascript">
+
+<%-- 탈퇴 모달 확인 버튼 눌렀을 때--%>
+document.querySelector("#modalConfirmButton2").addEventListener("click", function() {
+	const form = document.forms.form2;
+	const modalInput = document.querySelector("#oldPasswordInput2");
+	const formOldPasswordInput = document.querySelector(`#form2 input[name="oldPassword"]`)
+	// 모달 암호 input 입력된 값을                      / form2 input 안에 name 프로퍼티를 가진
+	// form 안의 기존암호 input에 옮기고
+	formOldPasswordInput.value = modalInput.value;
+	
+	// form을 submit
+	form.submit();
+});
+
 <%-- 회원정보 수정시 필요한 암호 입력하고 수정 --%>
+<%-- 수정 모달 확인 버튼 눌렀을때 --%>
 document.querySelector("#modalConfirmButton").addEventListener("click", function() {
 	const form = document.forms.form1;
 	const modalInput = document.querySelector("#oldPasswordInput1");
@@ -82,6 +121,7 @@ document.querySelector("#modalConfirmButton").addEventListener("click", function
 	// form을 submit
 	form.submit();
 });
+
 </script>
 </body>
 </html>

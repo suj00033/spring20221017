@@ -70,12 +70,25 @@ public class MemberController {
 	}
 	
 	@PostMapping("remove")
-	public String remove(String id, RedirectAttributes rttr) {
-		int cnt = service.remove(id);
+	public String remove(String id, String oldPassword, RedirectAttributes rttr) {
+		// 예전 정보를 가지고 와서
+		MemberDto oldMember =  service.getById(id);
+		
+		// 예전 암호와 일치하면 탈퇴 진행
+		if (oldMember.getPassword().equals(oldPassword)) {
+			int cnt = service.remove(id);
 		
 		rttr.addFlashAttribute("message", "회원 탈퇴하였습니다.");
 		
 		return "redirect:/board/list";
+	
+		// 아니면 modify창으로 되돌아옴
+		} else {
+			rttr.addAttribute("id", id);
+			rttr.addFlashAttribute("message", "암호가 일치하지 않습니다.");
+		
+			return "redirect:/member/modify";
+		}
 	}
 }
 
