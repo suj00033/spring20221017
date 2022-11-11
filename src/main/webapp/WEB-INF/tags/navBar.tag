@@ -11,6 +11,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/board/list" var="listLink"></c:url>
 <c:url value="/board/register" var="registerLink"></c:url>
+<c:url value="/member/signup" var="signupLink"></c:url>
 
 
 <nav class="navbar navbar-expand-lg bg-light">
@@ -24,8 +25,13 @@
         <li class="nav-item">
           <a class="nav-link ${active eq 'list' ? 'active' : '' }" href="${listLink }">목록</a>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link ${active eq 'register' ? 'active' : '' }" href="${registerLink }">작성</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link ${active eq 'register' ? 'active' : '' }" href="${signupLink }">회원가입</a>
         </li>
       </ul>
       
