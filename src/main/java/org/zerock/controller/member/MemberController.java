@@ -45,4 +45,11 @@ public class MemberController {
 	public void list(Model model) {
 		model.addAttribute("memberList", service.list());
 	}
+	
+	// 회원 정보 보기
+	@GetMapping("info") 
+	public void info(String id, Model model) {
+		
+		model.addAttribute("member", service.getById(id));
+	}
 }

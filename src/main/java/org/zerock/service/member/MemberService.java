@@ -24,5 +24,10 @@ public class MemberService {
 		return mapper.selectAll();
 	}
 
+	// 회원 정보 보기
+	public MemberDto getById(String id) {
+		return mapper.selectById(id);
+	}
+
 	
 }
