@@ -1,4 +1,5 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="active" required="false" %>
 
 <style>
@@ -8,7 +9,6 @@
 </style>
 
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/board/list" var="listLink"></c:url>
 <c:url value="/board/register" var="registerLink"></c:url>
 <c:url value="/member/signup" var="signupLink"></c:url>
