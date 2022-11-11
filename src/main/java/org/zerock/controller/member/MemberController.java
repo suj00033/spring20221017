@@ -45,17 +45,28 @@ public class MemberController {
 	}
 	
 	@PostMapping("modify")
-	public String modify(MemberDto member, RedirectAttributes rttr) {
-		int cnt = service.modify(member);
+	public String modify(MemberDto member, String oldPassword, RedirectAttributes rttr) {
+		// 회원 정보 수정 시 전 암호를 입력하여 수정하기
+		MemberDto oldMember = service.getById(member.getId());
 		
-		rttr.addAttribute("id", member.getId());
-		if (cnt == 1) {
-			rttr.addFlashAttribute("message", "회원 정보가 수정되었습니다.");
-			return "redirect:/member/info";
+		// 기존 암호가 일치할시에 회원 정보 수정하고
+		if (oldMember.getPassword().equals(oldPassword)) {
+			int cnt = service.modify(member);
+			
+			rttr.addAttribute("id", member.getId());
+			if (cnt == 1) {
+				rttr.addFlashAttribute("message", "회원 정보가 수정되었습니다.");
+				return "redirect:/member/info";
+			} else {
+				rttr.addFlashAttribute("message", "회원 정보가 수정되지 않았습니다.");
+				return "redirect:/member/modify";
+			}
+			// 일치하지않으면 변경되지않고 다시 modify로 되돌아옴
 		} else {
-			rttr.addFlashAttribute("message", "회원 정보가 수정되지 않았습니다.");
-			return "redirect:/member/modify";
+			rttr.addFlashAttribute("message", "암호가 일치하지 않습니다.");
 		}
+		
+		return "redirect:/member/modify";
 	}
 	
 	@PostMapping("remove")
