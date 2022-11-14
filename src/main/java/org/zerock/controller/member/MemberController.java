@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,25 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService service;
+	
+	// 이메일 중복 확인
+	@GetMapping("existEmail/{email}")
+	@ResponseBody
+	public Map<String, Object> existEmail(@PathVariable String email) {
+		Map<String, Object> map = new HashMap<>();
+		
+		MemberDto member = service.getByEmail(email);
+		
+		if (member == null) {
+			map.put("status", "not exist");
+			map.put("message", "사용가능한 이메일입니다.");
+		} else {
+			map.put("status", "not exist");
+			map.put("message", "이미 존재하는 이메일입니다.");
+		}
+		
+		return map;
+	}
 	
 	// 아이디 중복 확인
 	@GetMapping("existId/{id}")

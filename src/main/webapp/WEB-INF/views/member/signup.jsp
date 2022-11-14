@@ -55,11 +55,11 @@
 						</label>
 						
 						<div class="input-group">
-							<input type="email" name="email" class="form-control" />
-							<button class="btn btn-outline-secondary">중복확인</button>
+							<input id="emailInput1" type="email" name="email" class="form-control" />
+							<button id="emailExistButton1" class="btn btn-outline-secondary">중복확인</button>
 						</div>
 						
-						<div class="from-text">확인 메세지</div>
+						<div id="emailText1" class="form-text">이메일 중복확인을 해주세요.</div>
 					</div>
 					
 					<input disabled="disabled" class="btn btn-primary" type="submit" value="가입">
@@ -70,8 +70,20 @@
 	</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script type="text/javascript">
-/* 아이디 일치하는지 확인 */
 const ctx = "${pageContext.request.contextPath}";
+/* 이메일 일치하는지 확인 */
+document.querySelector("#emailExistButton1").addEventListener("click", function() {
+	const email = document.querySelector("#emailInput1").value;
+	
+	fetch(`{ctx}/member/existEmail/\${email}`)
+			.then(res => res.json()
+			.then(data => {
+				document.querySelector("emailText1").innerText = data.message;
+			})
+})
+
+
+/* 아이디 일치하는지 확인 */
 
 document.querySelector("#userIdExistButton1").addEventListener("click", function() {
 	// 입력된 userId를
@@ -82,7 +94,7 @@ document.querySelector("#userIdExistButton1").addEventListener("click", function
 			.then(res => res.json())
 			.then(data => {
 				// 응답 받아서 메세지 출력
-				document.querySelector("userIdText1").innerText = data.message); 
+				document.querySelector("userIdText1").innerText = data.message; 
 	});
 
 

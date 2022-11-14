@@ -44,4 +44,8 @@ public class MemberService {
 		return mapper.deleteById(id);
 	}
 
+	public MemberDto getByEmail(String email) {
+		return mapper.selectByEmail(email);
+	}
+
 }
