@@ -30,7 +30,7 @@
 							<button id="userIdExistButton1" class="btn btn-outline-secondary" type="button">중복확인</button>
 						</div>
 						
-						<div id="userIdText1" class="form-text">이미 있는 아이디입니다.</div>
+						<div id="userIdText1" class="form-text">아이디 중복확인을 해주세요.</div>
 						
 					</div>
 					
@@ -80,8 +80,10 @@ document.querySelector("#userIdExistButton1").addEventListener("click", function
 	// fetch 요청
 	fetch(ctx + "/member/existId/" + userId)
 			.then(res => res.json())
-			.then(data => console.log(data)); // 응답받아서 어떤일을 한다
-});
+			.then(data => {
+				// 응답 받아서 메세지 출력
+				document.querySelector("userIdText1").innerText = data.message); 
+	});
 
 
 

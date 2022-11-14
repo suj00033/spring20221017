@@ -1,5 +1,6 @@
 package org.zerock.controller.member;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,19 @@ public class MemberController {
 	@GetMapping("existId/{id}")
 	@ResponseBody
 	public Map<String, Object> existId(@PathVariable String id) {
-		System.out.println(id);
+		Map<String, Object> map = new HashMap<>();
 		
-		return null;
+		MemberDto member = service.getById(id);
+		
+		if (member == null) {
+			map.put("status", "not exist");
+			map.put("message", "사용가능한 아이디입니다.");
+		} else {
+			map.put("status", "exist");
+			map.put("message", "이미 존재하는 아이디입니다.");
+		}
+		
+		return map;
 	}
 	
 	@GetMapping("signup")
