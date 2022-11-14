@@ -28,29 +28,29 @@ public class MemberController {
 	@PostMapping("existEmail")
 	@ResponseBody
 	public Map<String, Object> existEmail(@RequestBody Map<String, String> req) {
+
 		Map<String, Object> map = new HashMap<>();
-		
+
 		MemberDto member = service.getByEmail(req.get("email"));
-		
+
 		if (member == null) {
 			map.put("status", "not exist");
 			map.put("message", "사용가능한 이메일입니다.");
 		} else {
-			map.put("status", "not exist");
+			map.put("status", "exist");
 			map.put("message", "이미 존재하는 이메일입니다.");
 		}
-		
+
 		return map;
 	}
-	
-	// 아이디 중복 확인
+
 	@GetMapping("existId/{id}")
 	@ResponseBody
 	public Map<String, Object> existId(@PathVariable String id) {
 		Map<String, Object> map = new HashMap<>();
-		
+
 		MemberDto member = service.getById(id);
-		
+
 		if (member == null) {
 			map.put("status", "not exist");
 			map.put("message", "사용가능한 아이디입니다.");
@@ -58,7 +58,7 @@ public class MemberController {
 			map.put("status", "exist");
 			map.put("message", "이미 존재하는 아이디입니다.");
 		}
-		
+
 		return map;
 	}
 	
