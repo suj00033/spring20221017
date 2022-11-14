@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,12 +25,12 @@ public class MemberController {
 	private MemberService service;
 	
 	// 이메일 중복 확인
-	@GetMapping("existEmail/{email}")
+	@PostMapping("existEmail")
 	@ResponseBody
-	public Map<String, Object> existEmail(@PathVariable String email) {
+	public Map<String, Object> existEmail(@RequestBody Map<String, String> req) {
 		Map<String, Object> map = new HashMap<>();
 		
-		MemberDto member = service.getByEmail(email);
+		MemberDto member = service.getByEmail(req.get("email"));
 		
 		if (member == null) {
 			map.put("status", "not exist");
